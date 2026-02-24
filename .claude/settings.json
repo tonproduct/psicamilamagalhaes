@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(printf:*)",
+      "Bash(npm install:*)",
+      "Bash(node figma-send.js:*)",
+      "Bash(node scripts/generate-tokens-json.js:*)",
+      "Bash(node scripts/generate-figma-variables.js:*)",
+      "Bash(node -e:*)",
+      "Bash(npx shadcn@latest add:*)"
+    ]
+  }
+}

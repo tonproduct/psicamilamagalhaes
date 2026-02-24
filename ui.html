@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { margin: 0; font-family: system-ui, sans-serif; background: #1e1e2e; color: #cdd6f4;
+         display: flex; align-items: center; justify-content: center; height: 100vh; }
+  #status { font-size: 13px; padding: 12px 16px; border-radius: 8px; background: #313244;
+            display: flex; align-items: center; gap: 8px; max-width: 260px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot.connecting { background: #f9e2af; animation: pulse 1s infinite; }
+  .dot.connected   { background: #a6e3a1; }
+  .dot.error       { background: #f38ba8; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+</style>
+</head>
+<body>
+<div id="status">
+  <span class="dot connecting" id="dot"></span>
+  <span id="label">Connecting to relay…</span>
+</div>
+<script>
+  const RELAY       = 'ws://localhost:3055';
+  const CHANNEL     = 'figma-bridge';
+  const MAX_RETRIES = 10;
+  let retries = 0;
+
+  function setStatus(type, text) {
+    document.getElementById('dot').className    = 'dot ' + type;
+    document.getElementById('label').textContent = text;
+  }
+
+  var activeWs = null;
+
+  window.onmessage = function(event) {
+    var msg = event.data && event.data.pluginMessage;
+    if (!msg) return;
+    if (msg.type === 'done') {
+      setStatus('connected', 'Done ✓');
+      if (activeWs && activeWs.readyState === 1) {
+        activeWs.send(JSON.stringify({ type: 'broadcast', channel: CHANNEL, message: { type: 'done' } }));
+      }
+    }
+    if (msg.type === 'error') {
+      setStatus('error', 'Error: ' + msg.message);
+      if (activeWs && activeWs.readyState === 1) {
+        activeWs.send(JSON.stringify({ type: 'broadcast', channel: CHANNEL, message: { type: 'error', message: msg.message } }));
+      }
+    }
+  };
+
+  function connect() {
+    setStatus('connecting', retries > 0
+      ? 'Reconnecting… (' + retries + '/' + MAX_RETRIES + ')'
+      : 'Connecting to relay…');
+
+    var ws = new WebSocket(RELAY);
+    activeWs = ws;
+
+    ws.onopen = function() {
+      retries = 0;
+      ws.send(JSON.stringify({ type: 'join', channel: CHANNEL, id: 'plugin-ui' }));
+    };
+
+    ws.onmessage = function(event) {
+      var data;
+      try { data = JSON.parse(event.data); } catch(e) { return; }
+
+      if (data.type === 'system' && typeof data.message === 'string' &&
+          data.message.indexOf('Joined channel') === 0) {
+        setStatus('connected', 'Bridge connected — ready');
+        parent.postMessage({ pluginMessage: { type: 'status', status: 'connected' } }, '*');
+        return;
+      }
+
+      if (data.type === 'broadcast' && data.message && data.message.type === 'exec') {
+        setStatus('connecting', 'Executing…');
+        parent.postMessage({ pluginMessage: data.message }, '*');
+      }
+    };
+
+    ws.onclose = function() {
+      if (retries < MAX_RETRIES) {
+        retries++;
+        setTimeout(connect, 3000);
+      } else {
+        setStatus('error', 'Could not reach relay on :3055');
+      }
+    };
+
+    ws.onerror = function() {};
+  }
+
+  connect();
+</script>
+</body>
+</html>

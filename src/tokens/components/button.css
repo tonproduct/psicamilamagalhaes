@@ -1,0 +1,75 @@
+/*
+ * COMPONENT TOKENS — Button
+ * ─────────────────────────────────────────────────────────────
+ * Absorvem tokens de contexto (semantic.css).
+ * Nunca referenciam primitivos diretamente.
+ *
+ * Variantes: default | secondary | destructive | outline | ghost | link
+ */
+
+:root {
+  /* ── Geometria compartilhada ── */
+  --btn-radius:       var(--radius);
+  --btn-font-size:    0.875rem;   /* 14px */
+  --btn-font-weight:  500;
+  --btn-gap:          0.5rem;     /* 8px — espaço ícone + label */
+
+  --btn-h-sm:   2rem;      /* 32px */
+  --btn-h-md:   2.25rem;   /* 36px — padrão */
+  --btn-h-lg:   2.5rem;    /* 40px */
+
+  --btn-px-sm:  0.75rem;   /* 12px */
+  --btn-px-md:  1rem;      /* 16px — padrão */
+  --btn-px-lg:  1.5rem;    /* 24px */
+
+  /* ── Variant: default ── */
+  --btn-default-bg:         var(--primary);
+  --btn-default-fg:         var(--primary-foreground);
+  --btn-default-border:     transparent;
+  --btn-default-bg-hover:   var(--prim-neutral-700);
+  --btn-default-fg-hover:   var(--primary-foreground);
+
+  /* ── Variant: secondary ── */
+  --btn-secondary-bg:         var(--secondary);
+  --btn-secondary-fg:         var(--secondary-foreground);
+  --btn-secondary-border:     transparent;
+  --btn-secondary-bg-hover:   var(--prim-neutral-200);
+  --btn-secondary-fg-hover:   var(--secondary-foreground);
+
+  /* ── Variant: destructive ── */
+  --btn-destructive-bg:         var(--destructive);
+  --btn-destructive-fg:         var(--prim-neutral-50);
+  --btn-destructive-border:     transparent;
+  --btn-destructive-bg-hover:   var(--prim-red-400);
+  --btn-destructive-fg-hover:   var(--prim-neutral-50);
+
+  /* ── Variant: outline ── */
+  --btn-outline-bg:         transparent;
+  --btn-outline-fg:         var(--foreground);
+  --btn-outline-border:     var(--border);
+  --btn-outline-bg-hover:   var(--accent);
+  --btn-outline-fg-hover:   var(--accent-foreground);
+
+  /* ── Variant: ghost ── */
+  --btn-ghost-bg:         transparent;
+  --btn-ghost-fg:         var(--foreground);
+  --btn-ghost-border:     transparent;
+  --btn-ghost-bg-hover:   var(--accent);
+  --btn-ghost-fg-hover:   var(--accent-foreground);
+
+  /* ── Variant: link ── */
+  --btn-link-fg:            var(--primary);
+  --btn-link-fg-hover:      var(--primary);
+  --btn-link-underline:     underline;
+}
+
+.dark {
+  /* ── Variant: default (dark) ── */
+  --btn-default-bg-hover:   var(--prim-neutral-300);
+
+  /* ── Variant: secondary (dark) ── */
+  --btn-secondary-bg-hover: var(--prim-neutral-600);
+
+  /* ── Variant: destructive (dark) ── */
+  --btn-destructive-bg-hover: var(--prim-red-500);
+}

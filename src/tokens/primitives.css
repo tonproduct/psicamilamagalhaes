@@ -1,0 +1,51 @@
+/*
+ * PRIMITIVE TOKENS
+ * ─────────────────────────────────────────────────────────────
+ * Valores brutos. Sem semântica — apenas a escala.
+ * Nunca use estes tokens diretamente em componentes.
+ * Use sempre os tokens de contexto (semantic.css).
+ */
+
+:root {
+  /* ── Neutral ── */
+  --prim-neutral-0:    oklch(1 0 0);
+  --prim-neutral-50:   oklch(0.985 0 0);
+  --prim-neutral-100:  oklch(0.97 0 0);
+  --prim-neutral-200:  oklch(0.922 0 0);
+  --prim-neutral-300:  oklch(0.869 0 0);
+  --prim-neutral-400:  oklch(0.708 0 0);
+  --prim-neutral-500:  oklch(0.556 0 0);
+  --prim-neutral-600:  oklch(0.4 0 0);
+  --prim-neutral-700:  oklch(0.269 0 0);
+  --prim-neutral-800:  oklch(0.205 0 0);
+  --prim-neutral-900:  oklch(0.145 0 0);
+  --prim-neutral-950:  oklch(0.09 0 0);
+  --prim-neutral-1000: oklch(0 0 0);
+
+  /* ── Red (destructive) ── */
+  --prim-red-400: oklch(0.704 0.191 22.216);
+  --prim-red-500: oklch(0.577 0.245 27.325);
+
+  /* ── Chart ── */
+  --prim-chart-orange:  oklch(0.646 0.222 41.116);
+  --prim-chart-teal:    oklch(0.6 0.118 184.704);
+  --prim-chart-blue:    oklch(0.398 0.07 227.392);
+  --prim-chart-yellow:  oklch(0.828 0.189 84.429);
+  --prim-chart-amber:   oklch(0.769 0.188 70.08);
+
+  /* ── Chart (dark) ── */
+  --prim-chart-indigo:  oklch(0.488 0.243 264.376);
+  --prim-chart-green:   oklch(0.696 0.17 162.48);
+  --prim-chart-pink:    oklch(0.627 0.265 303.9);
+  --prim-chart-crimson: oklch(0.645 0.246 16.439);
+
+  /* ── Radius ── */
+  --prim-radius-none: 0px;
+  --prim-radius-xs:   2px;
+  --prim-radius-sm:   4px;
+  --prim-radius-md:   6px;
+  --prim-radius-lg:   8px;
+  --prim-radius-xl:   12px;
+  --prim-radius-2xl:  16px;
+  --prim-radius-full: 9999px;
+}
