@@ -13,10 +13,29 @@
 /* ── Scroll behavior ── */
 html { scroll-behavior: smooth; }
 
+/* ── Brand color tokens (Camila Magalhães) ── */
+:root {
+  --brand-blue:     #4a6c9a;
+  --brand-darkblue: #2d4a73;
+  --brand-gray:     #5f6b7a;
+  --brand-beige:    #c8a97e;
+  --brand-white:    #ffffff;
+  --brand-light:    #f5f2ed;
+}
+
 /* ── Tailwind theme bridge ── */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --color-brand-blue:     var(--brand-blue);
+  --color-brand-darkblue: var(--brand-darkblue);
+  --color-brand-gray:     var(--brand-gray);
+  --color-brand-beige:    var(--brand-beige);
+  --color-brand-white:    var(--brand-white);
+  --color-brand-light:    var(--brand-light);
+
+  --font-serif: var(--font-playfair);
+  --font-sans:  var(--font-work-sans);
   --color-background:               var(--background);
   --color-foreground:               var(--foreground);
   --font-sans:                      var(--font-geist-sans);
@@ -71,3 +90,26 @@ html { scroll-behavior: smooth; }
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float    { animation: float 6s ease-in-out infinite; }
+.animate-fade-in  { animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Cursor customizado só aparece em dispositivos com mouse preciso */
+@media (pointer: coarse) {
+  .cursor-follower { display: none !important; }
+}
+
+/* Vídeo fullscreen: sempre mostra o conteúdo completo sem corte */
+video:fullscreen      { object-fit: contain !important; background: #000; }
+video:-webkit-full-screen { object-fit: contain !important; background: #000; }
+video:-moz-full-screen    { object-fit: contain !important; background: #000; }
