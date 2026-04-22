@@ -16,10 +16,48 @@ const workSans = Work_Sans({
   weight: ["300", "400", "500", "600"],
 });
 
+const SITE_URL = "https://psicamilamagalhaes.com.br";
+
 export const metadata: Metadata = {
-  title: "Camila Magalhães - Psicóloga Clínica | TCC e Acolhimento Emocional",
+  title: "Camila Magalhães — Psicóloga Online | TCC e Saúde Mental",
   description:
-    "Psicóloga Camila Magalhães oferece Terapia Cognitivo-Comportamental, escuta ativa e acolhimento emocional. Agende sua consulta presencial ou online.",
+    "Psicóloga clínica online. Camila Magalhães oferece Terapia Cognitivo-Comportamental (TCC) para ansiedade, autoestima, relacionamentos e luto. Agende sua consulta.",
+  keywords: [
+    "psicóloga online",
+    "psicoterapia online",
+    "TCC online",
+    "terapia cognitivo comportamental",
+    "psicóloga ansiedade",
+    "psicóloga autoestima",
+    "Camila Magalhães psicóloga",
+  ],
+  alternates: {
+    canonical: SITE_URL,
+  },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    title: "Camila Magalhães — Psicóloga Online | TCC e Saúde Mental",
+    description:
+      "Psicóloga clínica online. Atendimento via TCC para ansiedade, autoestima, relacionamentos e luto. Um espaço seguro para se entender melhor.",
+    siteName: "Camila Magalhães | Psicóloga",
+    locale: "pt_BR",
+    images: [
+      {
+        url: `${SITE_URL}/camila-hero.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "Camila Magalhães, Psicóloga Clínica Online",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Camila Magalhães — Psicóloga Online",
+    description:
+      "Atendimento psicológico online via TCC. Ansiedade, autoestima, relacionamentos e luto.",
+    images: [`${SITE_URL}/camila-hero.jpg`],
+  },
   icons: {
     icon: "/logo.png",
   },

@@ -165,10 +165,8 @@ export default function CamilaPage() {
 
   const FAB_PHRASES = [
     "Tire suas dúvidas",
-    "Posso te ajudar?",
     "Dê o primeiro passo",
-    "Sem compromisso",
-    "Me conta o que está sentindo",
+    "Posso te ajudar?",
   ];
 
   const bubblePhrase = useRef(FAB_PHRASES[Math.floor(Math.random() * FAB_PHRASES.length)]);
@@ -536,14 +534,14 @@ export default function CamilaPage() {
 
             {/* Texto */}
             <div>
-              <div className="hero-badge inline-flex items-center gap-2 bg-brand-blue/8 border border-brand-blue/15 rounded-full px-4 py-1.5 mb-8">
-                <div className="w-1.5 h-1.5 bg-brand-beige rounded-full" aria-hidden="true" />
-                <span className="text-brand-blue text-xs font-medium tracking-widest uppercase">
+              <div className="hero-badge inline-flex flex-wrap items-center gap-2 bg-brand-blue/8 border border-brand-blue/15 rounded-full px-4 py-1.5 mb-8">
+                <div className="w-1.5 h-1.5 bg-brand-beige rounded-full shrink-0" aria-hidden="true" />
+                <span className="text-brand-blue text-xs font-medium tracking-wider uppercase">
                   Psicóloga Clínica · CRP 06/220072
                 </span>
               </div>
 
-              <h1 className="font-serif text-[clamp(3rem,8vw,5.5rem)] text-brand-blue leading-[0.95] tracking-tight mb-6">
+              <h1 className="font-serif text-[clamp(2.5rem,8vw,5.5rem)] text-brand-blue leading-[0.95] tracking-tight mb-6">
                 <span className="hero-chars block overflow-hidden pb-[0.15em]">
                   <SplitChars text="Camila" />
                 </span>
@@ -581,29 +579,28 @@ export default function CamilaPage() {
             {/* Foto */}
             <div className="hero-photo relative flex justify-center lg:justify-end">
               {/* Logo flutuante decorativo */}
-              <div className="absolute -top-10 -right-10 w-32 h-32 pointer-events-none z-20 hidden lg:flex items-center justify-center">
+              <div className="absolute -top-6 -right-3 md:-top-8 md:-right-8 w-20 h-20 md:w-32 md:h-32 pointer-events-none z-20 flex items-center justify-center">
                 <div className="absolute inset-0 rounded-full bg-white" aria-hidden="true" />
                 <img
                   src="/logo.png"
                   alt=""
                   aria-hidden="true"
-                  className="relative w-20 h-20 object-contain"
+                  className="relative w-12 h-12 md:w-20 md:h-20 object-contain"
                 />
               </div>
               <div className="relative">
-                {/* Foto hero — trocar PHOTOS.hero quando tiver o arquivo */}
-                <div className="relative w-[300px] md:w-[420px] h-[420px] md:h-[560px] rounded-[2.5rem] overflow-hidden shadow-2xl">
+                {/* Foto hero */}
+                <div className="relative w-[280px] md:w-[420px] h-[390px] md:h-[560px] rounded-[2rem] overflow-hidden shadow-2xl">
                   <PhotoSlot
                     src={PHOTOS.hero}
                     alt="Camila Magalhães, Psicóloga Clínica"
                     fill
-                    sizes="(max-width: 768px) 300px, (max-width: 1024px) 420px, 420px"
+                    sizes="(max-width: 768px) 280px, (max-width: 1024px) 420px, 420px"
                     priority
                     blurDataURL={BLUR_HERO}
                     label={"Foto vertical da Camila\n840 × 1120 px · WebP"}
                     className="object-right object-center"
                   />
-                  {/* Overlay gradiente no rodapé — aparece sobre a foto real também */}
                   <div
                     className="absolute inset-x-0 bottom-0 h-1/3 pointer-events-none z-10"
                     style={{ background: "linear-gradient(to top, rgba(45,74,115,0.12), transparent)" }}
@@ -611,19 +608,19 @@ export default function CamilaPage() {
                   />
                 </div>
 
-                {/* Floating cards — visíveis só em telas maiores */}
-                <div className="hero-float-1 animate-float hidden lg:block absolute -left-8 top-16 bg-white rounded-2xl shadow-xl px-5 py-4 border border-brand-beige/20 w-44" aria-hidden="true">
-                  <p className="text-brand-blue font-serif text-sm font-semibold mb-1">TCC</p>
-                  <p className="text-brand-gray text-xs font-light leading-snug">Terapia Cognitivo-Comportamental</p>
+                {/* Floating cards */}
+                <div className="hero-float-1 animate-float absolute -left-6 md:-left-8 top-12 md:top-16 bg-white rounded-xl md:rounded-2xl shadow-xl px-3.5 py-3 md:px-5 md:py-4 border border-brand-beige/20 w-36 md:w-44" aria-hidden="true">
+                  <p className="text-brand-blue font-serif text-xs md:text-sm font-semibold mb-0.5 md:mb-1">TCC</p>
+                  <p className="text-brand-gray text-[11px] md:text-xs font-light leading-snug">Terapia Cognitivo-Comportamental</p>
                 </div>
 
-                <div className="hero-float-2 animate-float hidden lg:block absolute -right-6 bottom-20 bg-brand-darkblue rounded-2xl shadow-xl px-5 py-4 w-40" aria-hidden="true" style={{ animationDelay: "1s" }}>
-                  <p className="text-brand-beige font-serif text-sm font-semibold mb-1">Online</p>
-                  <p className="text-white/80 text-xs font-light leading-snug">Atendimento de onde você estiver</p>
+                <div className="hero-float-2 animate-float absolute -right-5 md:-right-6 bottom-16 md:bottom-20 bg-brand-darkblue rounded-xl md:rounded-2xl shadow-xl px-3.5 py-3 md:px-5 md:py-4 w-36 md:w-40" aria-hidden="true" style={{ animationDelay: "1s" }}>
+                  <p className="text-brand-beige font-serif text-xs md:text-sm font-semibold mb-0.5 md:mb-1">Online</p>
+                  <p className="text-white/80 text-[11px] md:text-xs font-light leading-snug">Atendimento de onde você estiver</p>
                 </div>
 
                 {/* Floating topic pills — fora da foto, à esquerda */}
-                <div className="animate-float hidden lg:flex flex-col gap-2 absolute -left-20 bottom-16" aria-hidden="true" style={{ animationDelay: "2s" }}>
+                <div className="animate-float hidden md:flex flex-col gap-2 absolute -left-20 bottom-16" aria-hidden="true" style={{ animationDelay: "2s" }}>
                   {["Ansiedade", "Autoestima", "Relacionamentos", "Luto"].map((tag) => (
                     <span key={tag} className="hero-tag flex items-center bg-white text-brand-blue text-xs font-medium px-3 py-1.5 rounded-full shadow-lg border border-brand-blue/15 whitespace-nowrap">
                       {tag}
@@ -873,18 +870,14 @@ export default function CamilaPage() {
       {/* ── QUOTE ── */}
       {/* ══════════════════════════════════════════════════════════ */}
       <section className="quote-section py-28 bg-brand-darkblue relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none opacity-10" aria-hidden="true">
-          <div className="absolute top-0 left-1/4 w-px h-full bg-brand-beige" />
-          <div className="absolute top-0 right-1/4 w-px h-full bg-brand-beige" />
-        </div>
         <div className="container mx-auto px-6 relative z-10 text-center">
           <div className="max-w-3xl mx-auto">
             <p className="text-brand-beige/40 font-serif text-7xl leading-none mb-4 select-none" aria-hidden="true">"</p>
             <blockquote>
-              <p className="quote-chars font-serif text-[clamp(1.5rem,3vw,2.25rem)] text-white leading-snug font-light tracking-wide">
-                <SplitChars text="Ressignificar é aprender a olhar" />
+              <p className="quote-chars font-serif text-[clamp(1.6rem,4vw,2.25rem)] text-white leading-snug font-light tracking-wide">
+                <SplitChars text="Ressignificar é aprender a olhar para si com mais" />
                 <br />
-                <SplitChars text="para si com mais gentileza." />
+                <SplitChars text="gentileza." />
               </p>
               <footer className="quote-author mt-8">
                 <cite className="text-white/75 text-sm font-light tracking-widest uppercase not-italic">
