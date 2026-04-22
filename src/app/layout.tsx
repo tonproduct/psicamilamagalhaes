@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Work_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import Script from "next/script";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -73,6 +74,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
+      <head>
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-BGTS6TJG55" strategy="afterInteractive" />
+        <Script id="gtag-init" strategy="afterInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-BGTS6TJG55');
+        `}</Script>
+      </head>
       <body className={`${playfair.variable} ${workSans.variable} antialiased`}>
         {children}
         <Toaster />
