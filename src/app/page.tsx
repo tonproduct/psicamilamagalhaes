@@ -466,12 +466,12 @@ export default function CamilaPage() {
       {/* ── Header ── */}
       <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-brand-beige/20">
         <div className="container mx-auto px-6 max-w-7xl py-4 flex items-center justify-between">
-          <span className="flex items-center gap-2.5">
+          <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue/40 rounded-lg">
             <img src="/logo.png" alt="" aria-hidden="true" className="w-8 h-8 object-contain" />
             <span className="font-serif text-xl text-brand-blue font-semibold tracking-wide">
               Camila Magalhães
             </span>
-          </span>
+          </button>
 
           <nav aria-label="Navegação principal" className="hidden md:flex items-center space-x-10">
             {NAV_ITEMS.map((s) => (
