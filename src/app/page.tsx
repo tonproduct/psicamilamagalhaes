@@ -16,7 +16,8 @@ import { BLUR_HERO, BLUR_SOBRE } from "@/lib/blur-placeholder";
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // ⚠️  SUBSTITUA pelo número real antes de publicar
-const WHATSAPP_URL = "https://wa.me/5511999999999";
+const WHATSAPP_URL = "https://wa.me/5519994529803";
+const INSTAGRAM_URL = "https://www.instagram.com/psi.camilamagalhaes/";
 
 const CIDADE = "São Paulo, SP";
 
@@ -159,6 +160,24 @@ export default function CamilaPage() {
   const [perPage, setPerPage] = useState(3);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [videosMuted, setVideosMuted] = useState(true);
+  const [fabFlipped, setFabFlipped] = useState(false);
+  const [showBubble, setShowBubble] = useState(false);
+
+  const FAB_PHRASES = [
+    "Tire suas dúvidas",
+    "Posso te ajudar?",
+    "Dê o primeiro passo",
+    "Sem compromisso",
+    "Me conta o que está sentindo",
+  ];
+
+  const bubblePhrase = useRef(FAB_PHRASES[Math.floor(Math.random() * FAB_PHRASES.length)]);
+
+  useEffect(() => {
+    const bubbleTimer = setTimeout(() => setShowBubble(true), 2000);
+    const flipTimer = setInterval(() => setFabFlipped((v) => !v), 3500);
+    return () => { clearTimeout(bubbleTimer); clearInterval(flipTimer); };
+  }, []);
 
   const unmuteAll = useCallback(() => {
     document.querySelectorAll<HTMLVideoElement>(".abordagem-video video").forEach((v) => { v.muted = false; });
@@ -279,9 +298,6 @@ export default function CamilaPage() {
         if (totalTopics) {
           gsap.set(topicEls.slice(1), { opacity: 0, y: 40 });
 
-          const videoEls = gsap.utils.toArray<HTMLElement>(".abordagem-video");
-          (videoEls[0]?.querySelector("video") as HTMLVideoElement)?.play().catch(() => {});
-
           let current = 0;
 
           const goTo = (idx: number) => {
@@ -289,21 +305,12 @@ export default function CamilaPage() {
             const prev = current;
             current = idx;
 
-            // Prev some completamente, só então o próximo aparece
-            gsap.to(topicEls[prev], {
-              opacity: 0, y: prev < idx ? -40 : 40, duration: 0.3, ease: "power2.in",
-              onComplete: () => {
-                gsap.fromTo(topicEls[idx],
-                  { opacity: 0, y: idx > prev ? 40 : -40 },
-                  { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
-                );
-              },
-            });
-            videoEls[prev].querySelector("video")?.pause();
-            gsap.to(videoEls[prev], { opacity: 0, pointerEvents: "none", duration: 0.3 });
-            gsap.to(videoEls[idx], { opacity: 1, pointerEvents: "auto", duration: 0.45, delay: 0.3,
-              onComplete: () => { if (current === idx) (videoEls[idx].querySelector("video") as HTMLVideoElement)?.play().catch(() => {}); },
-            });
+            gsap.killTweensOf([topicEls[prev], topicEls[idx]]);
+            gsap.to(topicEls[prev], { opacity: 0, y: prev < idx ? -40 : 40, duration: 0.25, ease: "power2.in" });
+            gsap.fromTo(topicEls[idx],
+              { opacity: 0, y: idx > prev ? 40 : -40 },
+              { opacity: 1, y: 0, duration: 0.45, delay: 0.2, ease: "power2.out" }
+            );
 
             gsap.to("body", { backgroundColor: topicBgs[idx], duration: 0.55 });
             dotEls.forEach((dot, i) => gsap.to(dot, { width: i === idx ? 24 : 8, backgroundColor: i === idx ? "#4a6c9a" : "rgba(74,108,154,0.25)", duration: 0.3 }));
@@ -314,7 +321,13 @@ export default function CamilaPage() {
             pin: true,
             start: "top top",
             end: "+=300%",
-            onUpdate: (self) => goTo(Math.min(Math.floor(self.progress * 4), 3)),
+            onUpdate: (self) => {
+              // Primeiros 12% do scroll: header some + tópicos sobem para o centro
+              const t = Math.min(self.progress / 0.12, 1);
+              gsap.set(".abordagem-header", { opacity: 1 - t, y: -24 * t });
+              gsap.set(".abordagem-topics-wrap", { y: -80 * t });
+              goTo(Math.min(Math.floor(self.progress * 4), 3));
+            },
             onLeave:      () => gsap.to("body", { backgroundColor: "#ffffff", duration: 0.5 }),
             onEnterBack:  () => gsap.to("body", { backgroundColor: topicBgs[current], duration: 0.5 }),
           });
@@ -397,21 +410,62 @@ export default function CamilaPage() {
       />
 
       {/* WhatsApp FAB */}
-      <a
-        href={WHATSAPP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Fale conosco pelo WhatsApp"
-        className="fixed bottom-6 right-6 z-[100] w-14 h-14 bg-green-700 hover:bg-green-800 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2"
-      >
-        <WhatsAppIcon className="w-7 h-7 text-white" />
-      </a>
+      <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-3">
+        {/* Balão */}
+        {showBubble && (
+          <div
+            className="relative bg-gray-800 rounded-2xl px-4 py-2.5 shadow-xl text-sm text-white font-medium whitespace-nowrap"
+            style={{ animation: "fabBubble 0.5s cubic-bezier(0.34,1.56,0.64,1) both" }}
+          >
+            <span className="block">{bubblePhrase.current}</span>
+            <span className="block text-white/70 text-xs font-normal">vamos conversar?</span>
+            <span className="absolute -bottom-2 right-6 w-4 h-4 bg-gray-800 rotate-45" aria-hidden="true" style={{ clipPath: "polygon(0 0, 100% 100%, 0 100%)" }} />
+          </div>
+        )}
+
+        {/* FAB flip card */}
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Fale conosco pelo WhatsApp"
+          className="w-16 h-16 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 rounded-full"
+          style={{ perspective: 600 }}
+        >
+          <div
+            className="relative w-full h-full rounded-full shadow-xl"
+            style={{
+              transformStyle: "preserve-3d",
+              transition: "transform 0.7s cubic-bezier(0.4,0.2,0.2,1)",
+              transform: fabFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+            }}
+          >
+            {/* Frente — foto da Camila */}
+            <div
+              className="absolute inset-0 rounded-full overflow-hidden border-2 border-white"
+              style={{ backfaceVisibility: "hidden" }}
+            >
+              <img src="/WhatsApp Image 2026-04-20 at 11.21.13 (1).jpeg" alt="Camila Magalhães" className="w-full h-full object-cover object-[center_55%]" style={{ transform: "scaleX(-1)" }} />
+            </div>
+            {/* Verso — ícone WhatsApp */}
+            <div
+              className="absolute inset-0 rounded-full bg-green-600 flex items-center justify-center border-2 border-white"
+              style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+            >
+              <WhatsAppIcon className="w-8 h-8 text-white" />
+            </div>
+          </div>
+        </a>
+      </div>
 
       {/* ── Header ── */}
       <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-brand-beige/20">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <span className="font-serif text-xl text-brand-blue font-semibold tracking-wide">
-            Camila Magalhães
+        <div className="container mx-auto px-6 max-w-7xl py-4 flex items-center justify-between">
+          <span className="flex items-center gap-2.5">
+            <img src="/logo.png" alt="" aria-hidden="true" className="w-8 h-8 object-contain" />
+            <span className="font-serif text-xl text-brand-blue font-semibold tracking-wide">
+              Camila Magalhães
+            </span>
           </span>
 
           <nav aria-label="Navegação principal" className="hidden md:flex items-center space-x-10">
@@ -476,12 +530,6 @@ export default function CamilaPage() {
       {/* ── HERO ── */}
       {/* ══════════════════════════════════════════════════════════ */}
       <section className="min-h-screen flex items-center relative overflow-hidden bg-white pt-20" aria-label="Apresentação">
-        <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full opacity-[0.06]"
-            style={{ background: "radial-gradient(circle, #4a6c9a 0%, transparent 70%)" }} />
-          <div className="absolute -bottom-16 -left-16 w-[400px] h-[400px] rounded-full opacity-[0.05]"
-            style={{ background: "radial-gradient(circle, #c8a97e 0%, transparent 70%)" }} />
-        </div>
 
         <div className="container mx-auto px-6 py-16 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
@@ -505,8 +553,10 @@ export default function CamilaPage() {
               </h1>
 
               <p className="hero-sub text-lg text-brand-gray leading-relaxed font-light max-w-md mb-6">
-                Um espaço seguro para quem quer se entender melhor,
-                superar a ansiedade e construir relações mais saudáveis.
+                Um <span className="font-normal">espaço seguro</span> para quem quer{" "}
+                <span className="font-normal">se entender melhor</span>,
+                superar a <span className="font-normal">ansiedade</span> e construir{" "}
+                <span className="font-normal">relações mais saudáveis</span>.
               </p>
 
               <div className="hero-ctas flex flex-col sm:flex-row gap-4">
@@ -530,6 +580,16 @@ export default function CamilaPage() {
 
             {/* Foto */}
             <div className="hero-photo relative flex justify-center lg:justify-end">
+              {/* Logo flutuante decorativo */}
+              <div className="absolute -top-10 -right-10 w-32 h-32 pointer-events-none z-20 hidden lg:flex items-center justify-center">
+                <div className="absolute inset-0 rounded-full bg-white" aria-hidden="true" />
+                <img
+                  src="/logo.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="relative w-20 h-20 object-contain"
+                />
+              </div>
               <div className="relative">
                 {/* Foto hero — trocar PHOTOS.hero quando tiver o arquivo */}
                 <div className="relative w-[300px] md:w-[420px] h-[420px] md:h-[560px] rounded-[2.5rem] overflow-hidden shadow-2xl">
@@ -552,18 +612,18 @@ export default function CamilaPage() {
                 </div>
 
                 {/* Floating cards — visíveis só em telas maiores */}
-                <div className="hero-float-1 hidden lg:block absolute -left-8 top-16 bg-white rounded-2xl shadow-xl px-5 py-4 border border-brand-beige/20 w-44" aria-hidden="true">
+                <div className="hero-float-1 animate-float hidden lg:block absolute -left-8 top-16 bg-white rounded-2xl shadow-xl px-5 py-4 border border-brand-beige/20 w-44" aria-hidden="true">
                   <p className="text-brand-blue font-serif text-sm font-semibold mb-1">TCC</p>
                   <p className="text-brand-gray text-xs font-light leading-snug">Terapia Cognitivo-Comportamental</p>
                 </div>
 
-                <div className="hero-float-2 hidden lg:block absolute -right-6 bottom-20 bg-brand-darkblue rounded-2xl shadow-xl px-5 py-4 w-40" aria-hidden="true">
+                <div className="hero-float-2 animate-float hidden lg:block absolute -right-6 bottom-20 bg-brand-darkblue rounded-2xl shadow-xl px-5 py-4 w-40" aria-hidden="true" style={{ animationDelay: "1s" }}>
                   <p className="text-brand-beige font-serif text-sm font-semibold mb-1">Online</p>
                   <p className="text-white/80 text-xs font-light leading-snug">Atendimento de onde você estiver</p>
                 </div>
 
-                {/* Floating topic pills — coluna vertical, visível só em telas maiores */}
-                <div className="hidden lg:flex flex-col gap-2 absolute -left-5 bottom-16" aria-hidden="true">
+                {/* Floating topic pills — fora da foto, à esquerda */}
+                <div className="animate-float hidden lg:flex flex-col gap-2 absolute -left-20 bottom-16" aria-hidden="true" style={{ animationDelay: "2s" }}>
                   {["Ansiedade", "Autoestima", "Relacionamentos", "Luto"].map((tag) => (
                     <span key={tag} className="hero-tag flex items-center bg-white text-brand-blue text-xs font-medium px-3 py-1.5 rounded-full shadow-lg border border-brand-blue/15 whitespace-nowrap">
                       {tag}
@@ -571,7 +631,6 @@ export default function CamilaPage() {
                   ))}
                 </div>
 
-                <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full border-2 border-dashed border-brand-beige/30" aria-hidden="true" />
                 <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full bg-brand-beige/10 blur-md" aria-hidden="true" />
               </div>
             </div>
@@ -675,118 +734,48 @@ export default function CamilaPage() {
       <section id="abordagem" className="relative pt-20" style={{ backgroundColor: "#eef2f7" }}>
 
         {/* Container pinado pelo GSAP */}
-        <div className="abordagem-pin h-screen flex flex-col justify-center overflow-hidden">
-          <div className="container mx-auto px-6 max-w-6xl w-full">
+        <div className="abordagem-pin h-screen flex items-center justify-center overflow-hidden">
+          <div className="container mx-auto px-6 max-w-2xl w-full">
 
-            {/* Header */}
-            <div className="text-center mb-10">
+            {/* Header — some quando o scroll começa */}
+            <div className="abordagem-header text-center mb-10">
               <p className="text-brand-gray text-xs tracking-[0.25em] uppercase font-medium mb-3">Abordagem</p>
               <h2 className="font-serif text-[clamp(2rem,4vw,3.5rem)] text-brand-blue leading-tight">
                 Temas que posso<br /><em>te ajudar</em>
               </h2>
             </div>
 
-            {/* Grid: texto + vídeo */}
-            <div className="grid md:grid-cols-[minmax(0,600px)_auto] gap-6 items-center justify-center">
-
-              {/* Tópicos sobrepostos (GSAP troca entre eles) */}
-              <div className="relative" style={{ minHeight: 280 }}>
-                {TOPICS.map(({ title, desc, iconKey }, idx) => {
-                  const icons = TOPIC_ICONS[iconKey];
-                  return (
-                    <div
-                      key={title}
-                      className="abordagem-topic absolute inset-0 flex flex-col justify-center"
-                      aria-hidden={idx !== 0}
-                      style={{ opacity: idx === 0 ? 1 : 0, transform: idx === 0 ? "none" : "translateY(40px)" }}
-                    >
-                      <div className="flex items-center gap-3 mb-5">
-                        <div
-                          className="w-12 h-12 rounded-xl flex items-center justify-center text-white flex-shrink-0"
-                          style={{ background: "linear-gradient(135deg, #4a6c9a, #2d4a73)" }}
-                          aria-hidden="true"
-                        >
-                          {icons.sm}
-                        </div>
-                        <p className="text-brand-gray text-xs tracking-[0.2em] uppercase font-medium">
-                          Tema {String(idx + 1).padStart(2, "0")} / {String(TOPICS.length).padStart(2, "0")}
-                        </p>
-                      </div>
-                      <h3 className="font-serif text-[clamp(1.8rem,3.5vw,2.8rem)] text-brand-blue font-semibold leading-tight mb-4">
-                        {title}
-                      </h3>
-                      <div className="w-10 h-px mb-4" style={{ backgroundColor: "#c8a97e" }} aria-hidden="true" />
-                      <p className="text-brand-gray leading-relaxed max-w-sm">{desc}</p>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Mockup de celular */}
-              <div className="relative flex-shrink-0" aria-hidden="false">
-                {/* Corpo do phone */}
-                <div
-                  className="relative rounded-[2.8rem] bg-white p-[10px]"
-                  style={{
-                    width: 220,
-                    boxShadow: "0 0 0 1.5px #d1d1d6, inset 0 0 0 1px rgba(0,0,0,0.04), 0 30px 60px rgba(0,0,0,0.2)",
-                  }}
-                >
-                  {/* Botão power (direita) */}
-                  <div className="absolute -right-[3px] top-24 w-[3px] h-12 bg-gray-400 rounded-r-sm" aria-hidden="true" />
-                  {/* Botões volume (esquerda) */}
-                  <div className="absolute -left-[3px] top-20 w-[3px] h-7 bg-gray-400 rounded-l-sm" aria-hidden="true" />
-                  <div className="absolute -left-[3px] top-32 w-[3px] h-7 bg-gray-400 rounded-l-sm" aria-hidden="true" />
-                  {/* Silêncio (esquerda) */}
-                  <div className="absolute -left-[3px] top-14 w-[3px] h-5 bg-gray-400 rounded-l-sm" aria-hidden="true" />
-
-                  {/* Tela */}
-                  <div className="relative overflow-hidden rounded-[2.2rem] bg-black" style={{ aspectRatio: "9/16" }}>
-                    {/* Dynamic island */}
-                    <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-14 h-4 bg-black rounded-full z-30 flex items-center justify-center gap-1.5" aria-hidden="true">
-                      <div className="w-1.5 h-1.5 rounded-full bg-gray-800" />
-                      <div className="w-2 h-2 rounded-full bg-gray-800" />
-                    </div>
-
-                    {/* Vídeos */}
-                    {TOPICS.map(({ title, videoSrc }, idx) => (
+            {/* Tópicos sobrepostos — centralizados */}
+            <div className="abordagem-topics-wrap relative mx-auto w-full text-center" style={{ minHeight: 260 }}>
+              {TOPICS.map(({ title, desc, iconKey }, idx) => {
+                const icons = TOPIC_ICONS[iconKey];
+                return (
+                  <div
+                    key={title}
+                    className="abordagem-topic absolute inset-0 flex flex-col items-center justify-center"
+                    aria-hidden={idx !== 0}
+                    style={{ opacity: idx === 0 ? 1 : 0 }}
+                  >
+                    <div className="flex items-center justify-center gap-3 mb-5">
                       <div
-                        key={title}
-                        className="abordagem-video absolute inset-0"
-                        style={{ opacity: idx === 0 ? 1 : 0, pointerEvents: idx === 0 ? "auto" : "none" }}
+                        className="w-12 h-12 rounded-xl flex items-center justify-center text-white flex-shrink-0"
+                        style={{ background: "linear-gradient(135deg, #4a6c9a, #2d4a73)" }}
+                        aria-hidden="true"
                       >
-                        <video
-                          src={videoSrc}
-                          className="w-full h-full object-cover"
-                          controls
-                          muted
-                          loop
-                          playsInline
-                          preload="auto"
-                        />
+                        {icons.sm}
                       </div>
-                    ))}
-
-                    {/* Botão ativar som */}
-                    {videosMuted && (
-                      <button
-                        onClick={unmuteAll}
-                        className="absolute bottom-14 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-black/60 hover:bg-black/80 text-white text-xs font-medium px-3 py-2 rounded-full backdrop-blur-sm transition-colors"
-                        aria-label="Ativar som"
-                      >
-                        <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                          <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-                        </svg>
-                        Ativar som
-                      </button>
-                    )}
-
-                    {/* Home indicator */}
-                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-20 h-1 bg-white/25 rounded-full z-30" aria-hidden="true" />
+                      <p className="text-brand-gray text-xs tracking-[0.2em] uppercase font-medium">
+                        Tema {String(idx + 1).padStart(2, "0")} / {String(TOPICS.length).padStart(2, "0")}
+                      </p>
+                    </div>
+                    <h3 className="font-serif text-[clamp(1.8rem,3.5vw,2.8rem)] text-brand-blue font-semibold leading-tight mb-4">
+                      {title}
+                    </h3>
+                    <div className="w-10 h-px mb-4 mx-auto" style={{ backgroundColor: "#c8a97e" }} aria-hidden="true" />
+                    <p className="text-brand-gray leading-relaxed">{desc}</p>
                   </div>
-                </div>
-              </div>
-
+                );
+              })}
             </div>
 
             {/* Dots de progresso */}
@@ -985,7 +974,7 @@ export default function CamilaPage() {
 
           <div className="text-center mt-10 reveal-up">
             <a
-              href="https://www.instagram.com/psicamilamagalhaes/"
+              href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-brand-blue hover:text-brand-darkblue transition-colors font-medium text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue/40 rounded"
@@ -1137,7 +1126,7 @@ export default function CamilaPage() {
           <div className="absolute bottom-8 right-20 w-24 h-24 border border-brand-beige rounded-full" />
         </div>
 
-        <div className="container mx-auto px-6 relative z-10">
+        <div className="container mx-auto px-6 max-w-7xl relative z-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div>
               <h2 className="font-serif text-2xl text-brand-beige font-semibold mb-1">Camila Magalhães</h2>
@@ -1155,7 +1144,7 @@ export default function CamilaPage() {
                 <WhatsAppIcon className="w-5 h-5 text-brand-beige" aria-hidden="true" />
               </a>
               <a
-                href="https://www.instagram.com/psicamilamagalhaes/"
+                href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors border border-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-beige/60"

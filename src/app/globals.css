@@ -109,6 +109,12 @@ html { scroll-behavior: smooth; }
   .cursor-follower { display: none !important; }
 }
 
+/* Balão do FAB WhatsApp */
+@keyframes fabBubble {
+  from { opacity: 0; transform: scale(0.7) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
 /* Vídeo fullscreen: sempre mostra o conteúdo completo sem corte */
 video:fullscreen      { object-fit: contain !important; background: #000; }
 video:-webkit-full-screen { object-fit: contain !important; background: #000; }

@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   title: "Camila Magalhães - Psicóloga Clínica | TCC e Acolhimento Emocional",
   description:
     "Psicóloga Camila Magalhães oferece Terapia Cognitivo-Comportamental, escuta ativa e acolhimento emocional. Agende sua consulta presencial ou online.",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({
