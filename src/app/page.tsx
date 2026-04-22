@@ -128,6 +128,12 @@ const STEPS = [
  * Acessível: o container anuncia o texto completo, os spans individuais
  * são escondidos de screen readers (evita leitura letra-a-letra).
  */
+function trackWhatsApp(location: string) {
+  if (typeof window !== "undefined" && (window as any).gtag) {
+    (window as any).gtag("event", "whatsapp_click", { event_category: "engagement", event_label: location });
+  }
+}
+
 function SplitChars({ text, className }: { text: string; className?: string }) {
   return (
     <span aria-label={text}>
@@ -426,6 +432,7 @@ export default function CamilaPage() {
           href={WHATSAPP_URL}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackWhatsApp("fab")}
           aria-label="Fale conosco pelo WhatsApp"
           className="w-16 h-16 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 rounded-full"
           style={{ perspective: 600 }}
@@ -560,6 +567,7 @@ export default function CamilaPage() {
               <div className="hero-ctas flex flex-col sm:flex-row gap-4">
                 <a
                   href={WHATSAPP_URL}
+                  onClick={() => trackWhatsApp("hero")}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 bg-brand-darkblue hover:bg-brand-blue text-white font-medium px-8 py-3.5 rounded-full transition-colors duration-300 text-sm shadow-lg shadow-brand-blue/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2"
@@ -709,6 +717,7 @@ export default function CamilaPage() {
 
                     <a
                       href={WHATSAPP_URL}
+                      onClick={() => trackWhatsApp("sobre")}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-sm text-white font-medium py-3 rounded-2xl text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
@@ -1084,6 +1093,7 @@ export default function CamilaPage() {
               {/* CTA principal — tamanho adequado, não full-width */}
               <a
                 href={WHATSAPP_URL}
+                onClick={() => trackWhatsApp("cta_principal")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-3 bg-green-700 hover:bg-green-800 text-white font-medium px-10 py-4 rounded-2xl transition-colors duration-300 shadow-lg shadow-green-700/20 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
@@ -1129,6 +1139,7 @@ export default function CamilaPage() {
             <nav aria-label="Redes sociais" className="flex gap-4">
               <a
                 href={WHATSAPP_URL}
+                onClick={() => trackWhatsApp("footer")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors border border-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-beige/60"
