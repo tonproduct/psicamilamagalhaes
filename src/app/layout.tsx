@@ -58,6 +58,9 @@ export const metadata: Metadata = {
       "Atendimento psicológico online via TCC. Ansiedade, autoestima, relacionamentos e luto.",
     images: [`${SITE_URL}/camila-hero.jpg`],
   },
+  verification: {
+    google: "DoTlsAAtU8AnugLC8Kqt1-Cu2d5vwvQxOKpzsU0c1RY",
+  },
   icons: {
     icon: "/logo.png",
   },
