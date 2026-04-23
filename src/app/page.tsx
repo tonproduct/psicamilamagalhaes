@@ -131,6 +131,7 @@ const STEPS = [
 function trackWhatsApp(location: string) {
   if (typeof window !== "undefined" && (window as any).gtag) {
     (window as any).gtag("event", "whatsapp_click", { event_category: "engagement", event_label: location });
+    (window as any).gtag("event", "conversion", { send_to: "AW-18107433038/cLoVCK_lrqEcEM6AprpD", value: 1.0, currency: "BRL" });
   }
 }
 
