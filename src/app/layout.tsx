@@ -75,6 +75,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
+        <Script src="https://www.googletagmanager.com/gtag/js?id=AW-18107433038" strategy="afterInteractive" />
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-BGTS6TJG55" strategy="afterInteractive" />
         <Script id="clarity-init" strategy="afterInteractive">{`
           (function(c,l,a,r,i,t,y){
@@ -88,6 +89,7 @@ export default function RootLayout({
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'G-BGTS6TJG55');
+          gtag('config', 'AW-18107433038');
         `}</Script>
       </head>
       <body className={`${playfair.variable} ${workSans.variable} antialiased`}>
